@@ -1,4 +1,4 @@
-# About
+= About
 
 This repository contains the `vboxconfig.sh` script fixed to properly detect
 non-"Oracle Solaris 11" platforms during VirtualBox installations.
@@ -9,7 +9,26 @@ particular. In case of the extended Solaris family (based on the open-sourced
 illumos core) the original Sun/Oracle Solaris logic does not work well, so
 to cater for these systems some fixes were needed.
 
-## Branches
+== Flag-files
+
+The original script supports influence on its configuration by having the
+administrator touch certain files before installation begins. This patch
+extends such approach with more files to touch (e.g. if your environment
+does not fit the expectations of the existing script).
+
+Useful names (relative to the package installation root directory) include:
+
+* `/etc/vboxinst_vboxflt` -- install NetFilter (STREAMS) networking module
+(applicable for illumos)
+
+* `/etc/vboxinst_vboxbow` -- install CrossBow networking module (for
+Oracle Solaris 11 snv_159+)
+
+* `/etc/vboxinst_vboxusb` -- force-attempt installation of the USBMonitor
+module and the USB module (otherwise requires that the script detects that
+your host kernel is Solaris 11 build 124 or Solaris 12)
+
+== Branches
 
 The "downloaded" branch shall contain occasional snapshots of the script
 provided by the upstream VirtualBox downloadable distributions.
@@ -17,10 +36,10 @@ provided by the upstream VirtualBox downloadable distributions.
 The "illumos-fix" is my work in progress as I develop and test the script,
 as well as rebase it to newer upstream versions over time.
 
-The "master" branch is a sort of release variant of the "illumos-fix" -
+The "master" branch is a sort of release variant of the "illumos-fix" --
 whatever seems stable enough to publish and use for everybody daring enough ;)
 
-## License
+== License
 
 Common license for the script is GPLv2 as in VirtualBox OSE.
 My changes were initially released under MIT License which is even less
@@ -30,6 +49,68 @@ In any case, I hope these changes would be found useful and might wind up
 in pre-packaged distributions, be it the original Oracle VirtualBox, or
 any of the OSE builds in illumos distributions.
 
+= Applying and using the patch to install VirtualBox
+
+NOTE: The instructions below were tested on an OpenIndiana Hipster 2015.0
+installation.
+
+* Download a VirtualBox distribution for "SunOS" (x86/amd64) hosts from
+http://download.virtualbox.org/virtualbox/ and unpack the archive, e.g.:
+----
+:; mkdir -p /tmp/vbox
+:; cd /tmp/vbox
+:; wget -c https://raw.githubusercontent.com/jimklimov/vboxconfig_sh/master/vboxconfig.sh.patch
+:; wget -c http://dlc-cdn.sun.com/virtualbox/4.3.28/VirtualBox-4.3.28-100309-SunOS.tar.gz && \
+   gzip -cd < "`ls -1 VirtualBox-*-SunOS.tar.gz | tail -1`" | tar xvf -
+
+VirtualBox-4.3.28-SunOS-amd64-r100309.pkg
+LICENSE
+autoresponse
+ReadMe.txt
+----
+
+* Unpack the package into individual files (this creates a subdirectory
+named `SUNWvbox` under the target directory `./` in our example case):
+----
+:; yes '' | pkgtrans "`ls -1 VirtualBox-*-SunOS*pkg | tail -1`" ./
+:; du -ks SUNWvbox/
+210448  SUNWvbox/
+:; find SUNWvbox/ | grep vboxc
+SUNWvbox/root/opt/VirtualBox/vboxconfig.sh
+----
+
+* Apply the patch:
+----
+:; ( cd SUNWvbox/root/opt/VirtualBox/ && gpatch -p1 ) < vboxconfig.sh.patch
+----
+
+* Fix up the SVR4 package metadata (embed new size and checksum of the
+resulting file into the `pkgmap`):
+----
+:; CSSZ="`/bin/cksum -B1 -s SUNWvbox/root/opt/VirtualBox/vboxconfig.sh | awk '{print $2" "$1}'`" && \
+   echo "$CSSZ"
+45116 6865
+
+:; sed 's,^\(.* f .* /opt/VirtualBox/vboxconfig.sh [^ ]* [^ ]* [^ ]* \)\([^ ]* [^ ]* \)\([^ ]*\)$,\1'"$CSSZ "'\3,' \
+    -i SUNWvbox/pkgmap
+----
+
+* NOTE: The next step covers installation of the resulting patched package
+on a hypervisor host. Keep in mind that this process will disrupt networking,
+so initiate the installation only from an out-of-band connection (console)
+or at least a non-disruptable session (VNC, `screen`) so that the SSH link
+disconnection will not botch the installation.
+
+* Hope that all went well above, and install the package (in case of upgrading
+or retrying, remove an old one first):
+----
+:; cd /tmp/vbox && \
+   if [ -d /var/sadm/pkg/SUNWvbox ] ; then yes y | pkgrm SUNWvbox ; fi && \
+   yes '' | pkgadd -d . -a ./autoresponse
+----
+
+
+Good luck,
 Jim Klimov
 
 ----------------
