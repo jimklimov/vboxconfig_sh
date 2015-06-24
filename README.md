@@ -1,4 +1,4 @@
-= About
+# About
 
 This repository contains the `vboxconfig.sh` script fixed to properly detect
 non-"Oracle Solaris 11" platforms during VirtualBox installations.
@@ -9,7 +9,7 @@ particular. In case of the extended Solaris family (based on the open-sourced
 illumos core) the original Sun/Oracle Solaris logic does not work well, so
 to cater for these systems some fixes were needed.
 
-== Branches
+## Branches
 
 The "downloaded" branch shall contain occasional snapshots of the script
 provided by the upstream VirtualBox downloadable distributions.
@@ -20,7 +20,7 @@ as well as rebase it to newer upstream versions over time.
 The "master" branch is a sort of release variant of the "illumos-fix" -
 whatever seems stable enough to publish and use for everybody daring enough ;)
 
-== License
+## License
 
 Common license for the script is GPLv2 as in VirtualBox OSE.
 My changes were initially released under MIT License which is even less
@@ -34,12 +34,12 @@ Jim Klimov
 
 ----------------
 
-== Original announcement
+## Original announcement
 
-From: Jim Klimov
-To: vbox-dev@virtualbox.org
-Date: 9 Mar 16:09 2015 
-Subj: Patch to support installation on non-Sun/Oracle Solaris hosts
+ From: Jim Klimov
+ To: vbox-dev@virtualbox.org
+ Date: 9 Mar 16:09 2015 
+ Subj: Patch to support installation on non-Sun/Oracle Solaris hosts
 
 Hello all,
 
@@ -62,6 +62,5 @@ I don't expect there are many of those installations left beside my closet,
 but those are all pleased with old VBox versions for now... ain't broke,
 you know ;)
 
-
-Hope this helps,
-// Jim Klimov
+ Hope this helps,
+ // Jim Klimov
