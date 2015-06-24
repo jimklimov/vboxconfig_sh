@@ -240,7 +240,10 @@ get_sysinfo()
             #            or "pkg://solaris/system/kernel@5.12,5.11-5.12.0.0.0.4.1:20120908T030246Z"
             #            or "pkg://solaris/system/kernel@0.5.11,5.11-0.175.0.0.0.1.0:20111012T032837Z"
             #            or "pkg://solaris/system/kernel@5.12-5.12.0.0.0.9.1.3.0:20121012T032837Z"
-            STR_KERN_MAJOR=`echo "$PKGFMRI" | sed 's/^.*\@//;s/\,.*//'`
+            # OI 151a8      "pkg://openindiana.org/system/kernel@0.5.11,5.11-0.151.1.8:20130721T133142Z"
+            # OI Hipster'15 "pkg://openindiana.org/system/kernel@0.5.11-2015.0.1.15135:20150621T130732Z"
+            # OmniOS Bloody "pkg://omnios/system/kernel@0.5.11,5.11-0.151015:20150519T142340Z"
+            STR_KERN_MAJOR=`echo "$PKGFMRI" | sed 's/^.*\@//;s/\,.*//;s/\-.*//'`
             if test ! -z "$STR_KERN_MAJOR"; then
                 # The format is "0.5.11" or "5.12"
                 # Let us just hardcode these for now, instead of trying to do things more generically. It's not
