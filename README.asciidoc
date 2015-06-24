@@ -83,6 +83,8 @@ SUNWvbox/root/opt/VirtualBox/vboxconfig.sh
 :; ( cd SUNWvbox/root/opt/VirtualBox/ && gpatch -p1 ) < vboxconfig.sh.patch
 patching file vboxconfig.sh
 ----
+Note that some "fuzz" or "offset <by a small number of> lines" messages may
+be reported by `gpatch`. If they are not "FAILED", this is generally harmless.
 
 * Fix up the SVR4 package metadata (embed new size and checksum of the
 resulting file into the `pkgmap`):
