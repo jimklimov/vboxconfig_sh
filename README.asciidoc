@@ -26,17 +26,17 @@ Oracle Solaris 11 snv_159+)
 
 * `/etc/vboxinst_vboxusb` -- force-attempt installation of the USBMonitor
 module and the USB module (otherwise requires that the script detects that
-your host kernel is Solaris 11 build 124 or Solaris 12)
+your host kernel is at least Solaris 11 build 124 or Solaris 12)
 
 == Branches
 
-The "downloaded" branch shall contain occasional snapshots of the script
+The `downloaded` branch shall contain occasional snapshots of the script
 provided by the upstream VirtualBox downloadable distributions.
 
-The "illumos-fix" is my work in progress as I develop and test the script,
+The `illumos-fix` is my work in progress as I develop and test the script,
 as well as rebase it to newer upstream versions over time.
 
-The "master" branch is a sort of release variant of the "illumos-fix" --
+The `master` branch is a sort of release variant of the `illumos-fix` --
 whatever seems stable enough to publish and use for everybody daring enough ;)
 
 == License
@@ -95,8 +95,8 @@ resulting file into the `pkgmap`):
     -i SUNWvbox/pkgmap
 ----
 
-* NOTE: The next step covers installation of the resulting patched package
-on a hypervisor host. Keep in mind that this process will disrupt networking,
+CAUTION: The next step covers installation of the resulting patched package on
+a hypervisor host. Keep in mind that this process *will* disrupt networking,
 so initiate the installation only from an out-of-band connection (console)
 or at least a non-disruptable session (VNC, `screen`) so that the SSH link
 disconnection will not botch the installation.
@@ -110,13 +110,16 @@ or retrying, remove an old one first):
 ----
 
 
-Good luck,
-Jim Klimov
+ Good luck,
+ Jim Klimov
 
-----------------
+''''
 
-## Original announcement
+# Original mailing-list announcement
 
+_slightly edited_
+
+----
 * From: Jim Klimov
 * To: vbox-dev@virtualbox.org
 * Date: 9 Mar 16:09 2015 
@@ -143,5 +146,6 @@ I don't expect there are many of those installations left beside my closet,
 but those are all pleased with old VBox versions for now... ain't broke,
 you know ;)
 
-    Hope this helps, 
-    // Jim Klimov
+Hope this helps, 
+// Jim Klimov
+----
