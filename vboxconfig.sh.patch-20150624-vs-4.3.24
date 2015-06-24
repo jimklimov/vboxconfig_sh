@@ -9,8 +9,8 @@ version 4.3.24 and my resulting fix to help install the SUNWvbox package.
 Copyright (C) 2013-2015 by Jim Klimov under the terms of GPLv2 License
 same as the upstream VirtualBox OSE project.
 
---- vboxconfig.sh.upstream-4.3.24	2015-03-02 16:17:43.000000000 +0100
-+++ vboxconfig.sh.fixed-20150624	2015-06-24 10:20:37.000000000 +0200
+--- upstream-4.3.24/vboxconfig.sh	2015-03-02 16:17:43.000000000 +0100
++++ fixed-20150624/vboxconfig.sh	2015-06-24 10:20:37.000000000 +0200
 @@ -1,7 +1,7 @@
  #!/bin/sh
  # $Id: vboxconfig.sh 91874 2014-01-28 12:29:16Z ramshankar $
