@@ -52,7 +52,7 @@ any of the OSE builds in illumos distributions.
 = Applying and using the patch to install VirtualBox
 
 NOTE: The instructions below were tested on an OpenIndiana Hipster 2015.0
-installation.
+installation and on an OmniOS Bloody 151015.
 
 * Download a VirtualBox distribution for "SunOS" (x86/amd64) hosts from
 http://download.virtualbox.org/virtualbox/ and unpack the archive, e.g.:
@@ -119,6 +119,26 @@ e.g.:
 ----
 :; pkgtrans . VirtualBox\-4.3.28\-SunOS\-amd64\-r100309-illumos.pkg SUNWvbox
 Transferring <SUNWvbox> package instance
+----
+
+* After updating the host software, if you're using the PUEL-licensed extension
+pack, don't forget to update it as well. A nice automation was posted on the
+VirtualBox forums https://forums.virtualbox.org/viewtopic.php?f=7&t=44337 by
+"Sasquatch":
+----
+#!/bin/bash
+if version=$(VBoxManage -v) ; then
+  echo $version
+  var1=$(echo $version | cut -d 'r' -f 1)
+  echo $var1
+  var2=$(echo $version | cut -d 'r' -f 2)
+  echo $var2
+  file="Oracle_VM_VirtualBox_Extension_Pack-$var1-$var2.vbox-extpack"
+  echo $file
+  wget -c http://download.virtualbox.org/virtualbox/$var1/$file -O /tmp/$file
+  sudo VBoxManage extpack uninstall "Oracle VM VirtualBox Extension Pack"
+  sudo VBoxManage extpack install /tmp/$file --replace
+fi
 ----
 
 * Do not forget to update VirtualBox Guest Additions on the virtual machines,
