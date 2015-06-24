@@ -36,10 +36,10 @@ Jim Klimov
 
 ## Original announcement
 
- From: Jim Klimov
- To: vbox-dev@virtualbox.org
- Date: 9 Mar 16:09 2015 
- Subj: Patch to support installation on non-Sun/Oracle Solaris hosts
+* From: Jim Klimov
+* To: vbox-dev@virtualbox.org
+* Date: 9 Mar 16:09 2015 
+* Subj: Patch to support installation on non-Sun/Oracle Solaris hosts
 
 Hello all,
 
@@ -62,5 +62,5 @@ I don't expect there are many of those installations left beside my closet,
 but those are all pleased with old VBox versions for now... ain't broke,
 you know ;)
 
- Hope this helps,
- // Jim Klimov
+    Hope this helps, 
+    // Jim Klimov
