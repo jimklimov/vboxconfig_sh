@@ -57,8 +57,8 @@ installation.
 * Download a VirtualBox distribution for "SunOS" (x86/amd64) hosts from
 http://download.virtualbox.org/virtualbox/ and unpack the archive, e.g.:
 ----
-:; mkdir -p /tmp/vbox
-:; cd /tmp/vbox
+:; mkdir -p /var/tmp/vbox
+:; cd /var/tmp/vbox
 :; wget -c https://raw.githubusercontent.com/jimklimov/vboxconfig_sh/master/vboxconfig.sh.patch
 :; wget -c http://dlc-cdn.sun.com/virtualbox/4.3.28/VirtualBox-4.3.28-100309-SunOS.tar.gz && \
    gzip -cd < "`ls -1 VirtualBox-*-SunOS.tar.gz | tail -1`" | tar xvf -
@@ -73,26 +73,29 @@ ReadMe.txt
 named `SUNWvbox` under the target directory `./` in our example case):
 ----
 :; yes '' | pkgtrans "`ls -1 VirtualBox-*-SunOS*pkg | tail -1`" ./
-:; du -ks SUNWvbox/
+:; du -ks SUNWvbox/ ; find SUNWvbox/ | grep vboxconfig
 210448  SUNWvbox/
-:; find SUNWvbox/ | grep vboxc
 SUNWvbox/root/opt/VirtualBox/vboxconfig.sh
 ----
 
 * Apply the patch:
 ----
 :; ( cd SUNWvbox/root/opt/VirtualBox/ && gpatch -p1 ) < vboxconfig.sh.patch
+patching file vboxconfig.sh
 ----
 
 * Fix up the SVR4 package metadata (embed new size and checksum of the
 resulting file into the `pkgmap`):
 ----
-:; CSSZ="`/bin/cksum -B1 -s SUNWvbox/root/opt/VirtualBox/vboxconfig.sh | awk '{print $2" "$1}'`" && \
+:; CSSZ="$( /bin/cksum -B1 -s SUNWvbox/root/opt/VirtualBox/vboxconfig.sh | awk '{print $2" "$1}' )" && \
    echo "$CSSZ"
-45116 6865
+47288 14514
 
 :; sed 's,^\(.* f .* /opt/VirtualBox/vboxconfig.sh [^ ]* [^ ]* [^ ]* \)\([^ ]* [^ ]* \)\([^ ]*\)$,\1'"$CSSZ "'\3,' \
     -i SUNWvbox/pkgmap
+
+:; grep -i vboxconfig SUNWvbox/pkgmap
+1 f none /opt/VirtualBox/vboxconfig.sh 0755 root bin 47288 14514 1431530679
 ----
 
 CAUTION: The next step covers installation of the resulting patched package on
@@ -104,11 +107,22 @@ disconnection will not botch the installation.
 * Hope that all went well above, and install the package (in case of upgrading
 or retrying, remove an old one first):
 ----
-:; cd /tmp/vbox && \
+:; cd /var/tmp/vbox && \
    if [ -d /var/sadm/pkg/SUNWvbox ] ; then yes y | pkgrm SUNWvbox ; fi && \
    yes '' | pkgadd -d . -a ./autoresponse
 ----
 
+* If you want to reuse the resulting package on several hosts, you can copy
+over the `SUNWvbox` subdirectory and install it in the same way as above,
+or you can `pkgtrans` it back into a single file for more convenient storage,
+e.g.:
+----
+:; pkgtrans . VirtualBox\-4.3.28\-SunOS\-amd64\-r100309-illumos.pkg SUNWvbox
+Transferring <SUNWvbox> package instance
+----
+
+* Do not forget to update VirtualBox Guest Additions on the virtual machines,
+this may be especially important for continued X11 guest desktop support.
 
 Good luck,
 Jim Klimov
