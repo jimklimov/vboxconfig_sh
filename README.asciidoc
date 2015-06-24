@@ -41,9 +41,9 @@ whatever seems stable enough to publish and use for everybody daring enough ;)
 
 == License
 
-Common license for the script is GPLv2 as in VirtualBox OSE.
-My changes were initially released under MIT License which is even less
-prohibitive; follow-up work here is licensed as GPLv2 to avoid the mess.
+Common license for the script itself is GPLv2 as in VirtualBox OSE.
+Patch changes are released under MIT License so as to conform to contribution
+requirements for the upstream Oracle VirtualBox project.
 
 In any case, I hope these changes would be found useful and might wind up
 in pre-packaged distributions, be it the original Oracle VirtualBox, or

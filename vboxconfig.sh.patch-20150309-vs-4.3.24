@@ -5,12 +5,15 @@ there is an ability to force the logic by 'touch /etc/vboxinst_vboxusb'
 
 This specific patch file contains differences between upstream release
 version 4.3.24 and my resulting fix to help install the SUNWvbox package.
+Beside metadata changes, it is the same patch as the one I released on
+the mailing lists in March 2015.
 
-Copyright (C) 2013-2015 by Jim Klimov under the terms of GPLv2 License
-same as the upstream VirtualBox OSE project.
+Copyright (C) 2013-2015 by Jim Klimov under the terms of MIT License
+so as to conform to contribution requirements for the upstream Oracle
+VirtualBox project.
 
---- vboxconfig.sh.upstream-4.3.24       2015-03-02 16:17:43.000000000 +0100
-+++ vboxconfig.sh.fixed-20150309        2015-03-09 15:30:35.673996000 +0100
+--- upstream-4.3.24/vboxconfig.sh       2015-03-02 16:17:43.000000000 +0100
++++ fixed-20150309/vboxconfig.sh        2015-03-09 15:30:35.673996000 +0100
 @@ -1,7 +1,7 @@
  #!/bin/sh
  # $Id: vboxconfig.sh 91874 2014-01-28 12:29:16Z ramshankar $

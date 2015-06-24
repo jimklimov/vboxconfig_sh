@@ -5,12 +5,17 @@ there is an ability to force the logic by 'touch /etc/vboxinst_vboxusb'
 
 This specific patch file contains differences between upstream release
 version 4.3.24 and my resulting fix to help install the SUNWvbox package.
+Compared to the March 2015 patch, this one supports the new PKG FMRI
+numbering scheme present in OpenIndiana Hipster-2015.0 repositories.
+Also it has been tested to apply to upstream release versions 4.3.28
+and 5.0rc1 (some fuzz and offset messages may be reported by gpatch).
 
-Copyright (C) 2013-2015 by Jim Klimov under the terms of GPLv2 License
-same as the upstream VirtualBox OSE project.
+Copyright (C) 2013-2015 by Jim Klimov under the terms of MIT License
+so as to conform to contribution requirements for the upstream Oracle
+VirtualBox project.
 
---- upstream-4.3.24/vboxconfig.sh	2015-03-02 16:17:43.000000000 +0100
-+++ fixed-20150624/vboxconfig.sh	2015-06-24 10:20:37.000000000 +0200
+--- upstream-4.3.24/vboxconfig.sh       2015-03-02 16:17:43.000000000 +0100
++++ fixed-20150624/vboxconfig.sh        2015-06-24 16:38:37.000000000 +0200
 @@ -1,7 +1,7 @@
  #!/bin/sh
  # $Id: vboxconfig.sh 91874 2014-01-28 12:29:16Z ramshankar $
@@ -20,14 +25,14 @@ same as the upstream VirtualBox OSE project.
  #
  
  #
-@@ -240,7 +240,10 @@
+@@ -240,2 +240,5 @@
              #            or "pkg://solaris/system/kernel@5.12,5.11-5.12.0.0.0.4.1:20120908T030246Z"
              #            or "pkg://solaris/system/kernel@0.5.11,5.11-0.175.0.0.0.1.0:20111012T032837Z"
-             #            or "pkg://solaris/system/kernel@5.12-5.12.0.0.0.9.1.3.0:20121012T032837Z"
--            STR_KERN_MAJOR=`echo "$PKGFMRI" | sed 's/^.*\@//;s/\,.*//'`
 +            # OI 151a8      "pkg://openindiana.org/system/kernel@0.5.11,5.11-0.151.1.8:20130721T133142Z"
 +            # OI Hipster'15 "pkg://openindiana.org/system/kernel@0.5.11-2015.0.1.15135:20150621T130732Z"
 +            # OmniOS Bloody "pkg://omnios/system/kernel@0.5.11,5.11-0.151015:20150519T142340Z"
+@@ -243,4 +246,4 @@
+-            STR_KERN_MAJOR=`echo "$PKGFMRI" | sed 's/^.*\@//;s/\,.*//'`
 +            STR_KERN_MAJOR=`echo "$PKGFMRI" | sed 's/^.*\@//;s/\,.*//;s/\-.*//'`
              if test ! -z "$STR_KERN_MAJOR"; then
                  # The format is "0.5.11" or "5.12"
