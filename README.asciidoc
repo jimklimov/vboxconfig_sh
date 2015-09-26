@@ -49,7 +49,50 @@ In any case, I hope these changes would be found useful and might wind up
 in pre-packaged distributions, be it the original Oracle VirtualBox, or
 any of the OSE builds in illumos distributions.
 
-= Applying and using the patch to install VirtualBox
+
+= Applying and using the patch to (un)install an unmodified VirtualBox package
+
+NOTE: Thanks to "russell" from the OpenIndiana mailing list for pointing
+in the right direction for this simplified procedure.
+
+If you can stand an "unclean" install/uninstall procedure, which is quite
+acceptable e.g. on a single-user desktop (as opposed to a VM server farm),
+you can follow this simple procedure:
+
+* Download this patch to your machine:
+----
+:; mkdir -p /var/tmp/vbox
+:; cd /var/tmp/vbox
+:; wget https://raw.githubusercontent.com/jimklimov/vboxconfig_sh/master/vboxconfig.sh.patch
+----
+
+* If you have on old version of VirtualBox already installed, you have to
+uninstall it before upgrading. If `pkgrm SUNWvbox` fails, you may need to
+patch (or replace) the `/opt/VirtualBox/vboxconfig.sh`:
+----
+:; ( cd /opt/VirtualBox/ && gpatch -p1 ) < vboxconfig.sh.patch
+patching file vboxconfig.sh
+----
+Note that some "fuzz" or "offset <by a small number of> lines" messages may
+be reported by `gpatch`. If they are not "FAILED", this is generally harmless.
+Complete uninstallation of old version with `pkgrm SUNWvbox`.
+
+* Install the new version according to standard procedure. Watch it fail
+to configure in the end.
+
+* Patch the newly installed `/opt/VirtualBox/vboxconfig.sh` following the
+procedure above, and run it to complete the installation:
+----
+:; ( cd /opt/VirtualBox/ && ./vboxconfig.sh --postinstall )
+----
+
+* At this point, your update should be complete.
+
+
+= Applying and using the patch to install VirtualBox from the package file
+
+If you like package installations to be marked clean and report no errors,
+you should patch the downloaded package to include the enhanced script.
 
 NOTE: The instructions below were tested on an OpenIndiana Hipster 2015.0
 installation and on an OmniOS Bloody 151015.
@@ -59,7 +102,7 @@ http://download.virtualbox.org/virtualbox/ and unpack the archive, e.g.:
 ----
 :; mkdir -p /var/tmp/vbox
 :; cd /var/tmp/vbox
-:; wget -c https://raw.githubusercontent.com/jimklimov/vboxconfig_sh/master/vboxconfig.sh.patch
+:; wget https://raw.githubusercontent.com/jimklimov/vboxconfig_sh/master/vboxconfig.sh.patch
 :; wget -c http://dlc-cdn.sun.com/virtualbox/4.3.28/VirtualBox-4.3.28-100309-SunOS.tar.gz && \
    gzip -cd < "`ls -1 VirtualBox-*-SunOS.tar.gz | tail -1`" | tar xvf -
 
