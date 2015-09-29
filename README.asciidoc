@@ -189,6 +189,20 @@ fi
 * Do not forget to update VirtualBox Guest Additions on the virtual machines,
 this may be especially important for continued X11 guest desktop support.
 
+= X.Org config file chooser for dual-booted VM/HW setups
+
+I have an OI installation on a laptop alternately running as a VM or as a
+"physical" OS. One of the implications is that there are different preset
+X11 driver configurations relevant to different hardware. A nifty trick I
+saw advised on the internet was to add an init-script that would choose
+the suitable pre-made X11 config file and install it, before running GDM
+or equivalent graphics engine.
+
+This is what `S98vbox-dualboot-xorg` script is intended for. Look in the
+sources for hints on configuration, and copy and tune the needed config
+files as `/etc/X11/xorg.conf*` names referenced in the script variables
+(as is, or renamed via its own optional simple config file).
+
 Good luck,
 Jim Klimov
 

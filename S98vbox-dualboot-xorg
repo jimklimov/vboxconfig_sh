@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# /etc/rc2.d/S98vbox-dualboot-xorg
+# (or otherwise set to run before gdm if autorunning under SMF)
+# Pick the X11 driver (preset config) based on running hardware (phys/virt)
+# (C) 2015 by Jim Klimov
+
+XORGCFG=/etc/X11/xorg.conf
+XORGCFG_VM="$XORGCFG.vboxvideo"
+XORGCFG_HW="$XORGCFG.vesa"
+
+[ -s /etc/default/vbox-dualboot-xorg ] && \
+	. /etc/default/vbox-dualboot-xorg
+
+[ -s "$XORGCFG" -a -s "$XORGCFG_VM" -a -s "$XORGCFG_HW" ] || \
+	{ echo "Error: current or some alternate xorg.conf file not found" >&2
+	  exit 1; }
+
+HWINFO="`smbios`" && [ -n "$HWINFO" ] || \
+	{ echo "Error getting HW info" >&2
+	  exit 1; }
+
+if echo "$HWINFO" | egrep -i "vbox|virtualbox" >/dev/null; then
+	echo "HW info detected: VirtualBox"
+	XORGCFG_NEW="$XORGCFG_VM"
+else
+	echo "HW info detected: Physical"
+	XORGCFG_NEW="$XORGCFG_HW"
+fi
+
+if diff "$XORGCFG" "$XORGCFG_NEW" >/dev/null; then
+	echo "X11 Already configured, nothing to do"
+else
+	if  diff "$XORGCFG_HW" "$XORGCFG" >/dev/null || \
+	    diff "$XORGCFG_VM" "$XORGCFG" >/dev/null ; then
+		echo "X11 Current config different from either preset, saving a copy"
+		cp -pf "$XORGCFG" "$XORGCFG.prev.$$"
+	fi
+	echo "Replacing $XORGCFG with $XORGCFG_NEW"
+	cp -pf "$XORGCFG_NEW" "$XORGCFG"
+fi
