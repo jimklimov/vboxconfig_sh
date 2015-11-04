@@ -50,7 +50,16 @@ in pre-packaged distributions, be it the original Oracle VirtualBox, or
 any of the OSE builds in illumos distributions.
 
 
-= Applying and using the patch to (un)install an unmodified VirtualBox package
+= Applying and using the patch to (un)install a VirtualBox package
+
+There are two approaches: partially install the unmodified package, fail
+in the configuration step on an unsupported OS, patch the installed script
+and resume configuration to complete the installation, or to fix the SVR4
+package file. The former is more simple in practice, while the latter is
+more suitable for distro maintainers or LAN admins who want to suffer the
+complicated procedure once per upgrade, not once per host.
+
+== Applying and using the patch to (un)install an unmodified VirtualBox package
 
 NOTE: Thanks to "russell" from the OpenIndiana mailing list for pointing
 in the right direction for this simplified procedure.
@@ -83,13 +92,16 @@ to configure in the end.
 * Patch the newly installed `/opt/VirtualBox/vboxconfig.sh` following the
 procedure above, and run it to complete the installation:
 ----
+:; ( cd /opt/VirtualBox/ && gpatch -p1 ) < vboxconfig.sh.patch
 :; ( cd /opt/VirtualBox/ && ./vboxconfig.sh --postinstall )
+:; svcadm enable virtualbox/balloonctrl
+:; svcadm enable virtualbox/zoneaccess
 ----
 
 * At this point, your update should be complete.
 
 
-= Applying and using the patch to install VirtualBox from the package file
+== Applying and using the patch to install VirtualBox from the package file
 
 If you like package installations to be marked clean and report no errors,
 you should patch the downloaded package to include the enhanced script.
@@ -166,7 +178,9 @@ e.g.:
 Transferring <SUNWvbox> package instance
 ----
 
-* After updating the host software, if you're using the PUEL-licensed extension
+= Updating the Extension pack
+
+After updating the host software, if you're using the PUEL-licensed extension
 pack, don't forget to update it as well. A nice automation was posted on the
 VirtualBox forums https://forums.virtualbox.org/viewtopic.php?f=7&t=44337 by
 "Sasquatch":
@@ -182,12 +196,26 @@ if version=$(VBoxManage -v) ; then
   echo $file
   wget -c http://download.virtualbox.org/virtualbox/$var1/$file -O /tmp/$file
   sudo VBoxManage extpack uninstall "Oracle VM VirtualBox Extension Pack"
-  sudo VBoxManage extpack install /tmp/$file --replace
+  sudo VBoxManage extpack install --replace /tmp/$file
 fi
 ----
 
-* Do not forget to update VirtualBox Guest Additions on the virtual machines,
-this may be especially important for continued X11 guest desktop support.
+= Updating Guest Additions
+
+Do not forget to update VirtualBox Guest Additions on the virtual machines,
+this may be especially important for continued X11 guest desktop support,
+and you may need to reinstall the additions if your X11 server is updated.
+
+On a guest (or dualboot) Solaris/illumos installation you'd do:
+
+----
+:; 7z x "`ls -1 VBoxGuestAdditions*.iso | tail -1`" VBoxSolarisAdditions.pkg && \
+   yes | pkgrm SUNWvboxguest && \
+   yes '' | pkgadd -d VBoxSolarisAdditions.pkg all
+----
+
+You'd likely have to reboot the guest to take advantage of the new
+`vboxguest` versions.
 
 = X.Org config file chooser for dual-booted VM/HW setups
 
@@ -202,6 +230,13 @@ This is what `S98vbox-dualboot-xorg` script is intended for. Look in the
 sources for hints on configuration, and copy and tune the needed config
 files as `/etc/X11/xorg.conf*` names referenced in the script variables
 (as is, or renamed via its own optional simple config file).
+
+On my laptop with a modular config I switch over the files which define
+just the Screen#0 `/etc/X11/xorg.conf.d/00-common.conf{.vboxguest,.radeon}`
+and keep the rest of device/card/monitor definitions in a common heap of
+nearby snippet-files. This can be achieved with a customized config file
+`/etc/default/vbox-dualboot-xorg` to define the virt/phys applicable
+filename patterns that you want to switch.
 
 Good luck,
 Jim Klimov
