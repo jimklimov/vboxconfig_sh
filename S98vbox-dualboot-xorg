@@ -5,6 +5,8 @@
 # Pick the X11 driver (preset config) based on running hardware (phys/virt)
 # (C) 2015 by Jim Klimov
 
+[ -f /etc/.novboxxorg ] && exit 0
+
 XORGCFG=/etc/X11/xorg.conf
 XORGCFG_VM="$XORGCFG.vboxvideo"
 XORGCFG_HW="$XORGCFG.vesa"
