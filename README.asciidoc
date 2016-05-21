@@ -90,7 +90,8 @@ Complete uninstallation of old version with `pkgrm SUNWvbox`.
 to configure in the end.
 
 * Patch the newly installed `/opt/VirtualBox/vboxconfig.sh` following the
-procedure above, and run it to complete the installation:
+procedure above, run it to complete the installation, and enable some new
+services installed as part of VirtualBox:
 ----
 :; ( cd /opt/VirtualBox/ && gpatch -p1 ) < vboxconfig.sh.patch
 :; ( cd /opt/VirtualBox/ && ./vboxconfig.sh --postinstall )
@@ -98,7 +99,9 @@ procedure above, and run it to complete the installation:
 :; svcadm enable virtualbox/zoneaccess
 ----
 
-* At this point, your update should be complete.
+* At this point, your update of VirtualBox core should be complete.
+Do not forget to proceed to updating the Extension Pack and/or Guest
+Additions, if applicable, as detailed below ;)
 
 
 == Applying and using the patch to install VirtualBox from the package file
@@ -200,6 +203,14 @@ if version=$(VBoxManage -v) ; then
 fi
 ----
 
+In many cases, a more simple incantation helps (assuming you are in the
+download directory where the extension pack file is present, and you do
+want the newest one:
+----
+  sudo VBoxManage extpack install --replace \
+    "`ls -1 Oracle_VM_VirtualBox_Extension_Pack-* | tail -1`"
+----
+
 = Updating Guest Additions
 
 Do not forget to update VirtualBox Guest Additions on the virtual machines,
@@ -216,6 +227,7 @@ On a guest (or dualboot) Solaris/illumos installation you'd do:
 
 You'd likely have to reboot the guest to take advantage of the new
 `vboxguest` versions.
+
 
 = X.Org config file chooser for dual-booted VM/HW setups
 
