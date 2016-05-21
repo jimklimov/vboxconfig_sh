@@ -250,6 +250,43 @@ nearby snippet-files. This can be achieved with a customized config file
 `/etc/default/vbox-dualboot-xorg` to define the virt/phys applicable
 filename patterns that you want to switch.
 
+
+= Fixing lack of GUI when executed with another user account
+
+Every once in a while I have to use `VirtualBox` GUI as a `root` (e.g. when
+accessing dual-booted OSes that reside on raw partitions - and an unprivileged
+user reasonably has no access there.
+
+So I `sudo VirtualBox`, and on an unprepared machine I see just the window
+with no elements, perhaps a popup I can not close (it is a message that
+VirtualBox can not find some disk images in my case, you can just press
+ESC to get rid of it) and tons of error messages like these below in the
+terminal which launched the GUI:
+
+----
+Qt WARNING: X Error: BadDrawable (invalid Pixmap or Window parameter) 9
+  Major opcode: 62 (X_CopyArea)
+  Resource id:  0x4000079
+Qt WARNING: X Error: BadPixmap (invalid Pixmap parameter) 4
+  Major opcode: 54 (X_FreePixmap)
+  Resource id:  0x4000079
+Qt WARNING: X Error: BadShmSeg (invalid shared segment parameter) 128
+  Extension:    130 (MIT-SHM)
+  Minor opcode: 2 (X_ShmDetach)
+  Resource id:  0x4000079
+----
+
+The issue has to do with new shared memory policies in QT4 and non-`root` X
+server. The currently working solution (or at least workaround) is to export
+a variable in your shell (consider also adding it to your `root` account's
+`~/.profile`):
+
+----
+QT_X11_NO_MITSHM=1
+export QT_X11_NO_MITSHM
+----
+
+
 Good luck,
 Jim Klimov
 
