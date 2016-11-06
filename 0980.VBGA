@@ -1,0 +1,26 @@
+# Save to /etc/X11/xinit/xinitrc.d/0980.VBGA as executable,
+# to enable VirtualBox Guest additions X11 client, optionally
+# Copyright (C) 2016 by Jim Klimov
+
+[ -n "$DISPLAY" ] && \
+( # scope limit for vars
+HWINFO="`smbios`" && [ -n "$HWINFO" ] || \
+        { echo "Error getting HW info" >&2
+          HWINFO=""; }
+
+if [ -n "$HWINFO" ] && \
+   echo "$HWINFO" | egrep -i "vbox|virtualbox" >/dev/null \
+; then
+        echo "HW info detected: VirtualBox"
+        echo "Spawning VirtualBox Guest Additions"
+        for ARG in --clipboard --display --seamless --draganddrop ; do
+            /usr/bin/VBoxClient $ARG
+        done
+	echo "Disabling X11 screensaver, blanking and poweroff features"
+	xset -dpms ; xset -fbpm ; xset s off
+ 	#TOenable# xset +dpms; xset +fbpm; xset s on
+else
+        echo "HW info detected: Physical - no VirtualBox tweaks to apply"
+fi
+) >&2
+

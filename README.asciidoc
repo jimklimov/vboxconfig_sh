@@ -203,6 +203,24 @@ sources for hints on configuration, and copy and tune the needed config
 files as `/etc/X11/xorg.conf*` names referenced in the script variables
 (as is, or renamed via its own optional simple config file).
 
+= XSession tweaks for VirtualBox Guest Additions and non-Oracle X sessions
+
+As OpenIndiana Hipster switched to offer MATE instead of GNOME2 recently,
+I found that the Guest Additions' `VBoxClient` is not started under the new
+sessions. Without much further digging about the causes, I made a config
+file to force startup of those clients in any X session instead (IFF the
+hardware is deemed to be a VirtualBox -- so it is friendly to dual-booters).
+Just copy `0980.VBGA` to `/etc/X11/xinit/xinitrc.d/` and make sure it is
+marked as executable, and it should be picked up by `/etc/gdm/Xsession`
+script processing when an X11 session starts up for any user. Alternately,
+reference a copy of this code from your account's `~/.xprofile` file, if
+you want to limit the impact to just a few users.
+
+Research has shown that it is not a problem to run `VBoxClient` twice or
+more -- the daemon only forks and runs once (overall there's two processes
+for each of the options), so it should not cause problems for GNOME2 sessions
+as well.
+
 Good luck,
 Jim Klimov
 
