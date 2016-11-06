@@ -179,10 +179,11 @@ if version=$(VBoxManage -v) ; then
   var2=$(echo $version | cut -d 'r' -f 2)
   echo $var2
   file="Oracle_VM_VirtualBox_Extension_Pack-$var1-$var2.vbox-extpack"
+  localfile="/tmp/$file"
   echo $file
-  wget -c http://download.virtualbox.org/virtualbox/$var1/$file -O /tmp/$file
+  wget -c http://download.virtualbox.org/virtualbox/$var1/$file -O $localfile
   sudo VBoxManage extpack uninstall "Oracle VM VirtualBox Extension Pack"
-  sudo VBoxManage extpack install /tmp/$file --replace
+  sudo VBoxManage extpack install $localfile --replace
 fi
 ----
 
