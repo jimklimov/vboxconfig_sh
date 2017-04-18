@@ -9,6 +9,13 @@ particular. In case of the extended Solaris family (based on the open-sourced
 illumos core) the original Sun/Oracle Solaris logic does not work well, so
 to cater for these systems some fixes were needed.
 
+NOTE: There are currently some issues installing VirtualBox 5.1.x on certain
+illumos distributions, because the package `preinstall` script also got too
+smart and checks for packages expected on Sun/Oracle Solaris 11, as well as
+because the GUI part needs QT5 which is not avaiable everywhere. Things do
+still work for VirtualBox 5.0.36 at least, and for older versions (but note
+they are not anymore supported by developers, or are nearing this deadline).
+
 == Flag-files
 
 The original script supports influence on its configuration by having the
