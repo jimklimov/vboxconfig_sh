@@ -85,11 +85,28 @@ be reported by `gpatch`. If they are not "FAILED", this is generally harmless.
 Complete uninstallation of old version with `pkgrm SUNWvbox`.
 
 * Install the new version according to standard procedure. Watch it fail
-to configure in the end.
+to configure in the end. Example procedure:
+----
+:; mkdir -p /var/tmp/vbox
+:; cd /var/tmp/vbox
+:; wget -c http://dlc-cdn.sun.com/virtualbox/4.3.28/VirtualBox-4.3.28-100309-SunOS.tar.gz && \
+   gzip -cd < "`ls -1 VirtualBox-*-SunOS.tar.gz | tail -1`" | tar xvf -
+:; pkgadd -a autoresponse -d "`ls -1 VirtualBox-*-SunOS-amd64*.pkg | tail -1`"
+
+...
+## Executing postinstall script.
+Checking for older bits...
+## Failed to parse the Solaris kernel major version.
+## ERROR!! Failed to remove older/partially installed bits.
+pkgadd: ERROR: postinstall script did not complete successfully
+
+Installation of <SUNWvbox> failed.
+----
 
 * Patch the newly installed `/opt/VirtualBox/vboxconfig.sh` following the
 procedure above, and run it to complete the installation:
 ----
+:; ( cd /opt/VirtualBox/ && gpatch -p1 ) < vboxconfig.sh.patch
 :; ( cd /opt/VirtualBox/ && ./vboxconfig.sh --postinstall )
 ----
 
